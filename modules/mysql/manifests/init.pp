@@ -15,7 +15,7 @@ class mysql::server {
 	
         file { "$datadir/my.cnf":
     	    owner   => "mysql", group => "mysql",
-    	    content => template("mysql/my.cnf.erb"),
+    	    content => template("mysql/mysql/my.cnf.erb"),
 	    notify  => Service["mysql"],
 	    require => Package["mysql-server"],
 	}
