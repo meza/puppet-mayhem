@@ -1,0 +1,26 @@
+<VirtualHost <%= host %>:<%= port %>>
+	ServerName www.<%= name %>
+	ServerAlias <%= name %>
+	ServerAdmin meza@meza.hu
+
+	DocumentRoot <%= docroot %>
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride All
+	</Directory>
+	<Directory <%= docroot %>>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride All
+		Order allow,deny
+		allow from all
+	</Directory>
+
+	ErrorLog <%= errorLog %>
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog <%= accessLog %> combined
+
+</VirtualHost>
