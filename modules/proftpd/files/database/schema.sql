@@ -2,7 +2,8 @@ CREATE TABLE ftpgroup (
 groupname varchar(16) NOT NULL default '',
 gid smallint(6) NOT NULL default '5500',
 members varchar(16) NOT NULL default '',
-UNIQUE KEY groupname (groupname)
+KEY groupname (groupname),
+UNIQUE KEY uni_gr_member (groupname, members)
 ) TYPE=MyISAM COMMENT='ProFTP group table';
 
 CREATE TABLE ftpquotalimits (

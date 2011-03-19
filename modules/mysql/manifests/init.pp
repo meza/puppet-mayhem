@@ -44,9 +44,9 @@ class mysql::server {
     define feedDatabase ( $database, $source, $username, $password ) {
 	exec {	"feed-${name}":
 	    command     => "/usr/bin/mysql -u$username -p\"$password\" $database < $source",
-	    require     => [File[$source], Service["mysql"]],
+	    require     => [Service["mysql"]],
 	    refreshonly => true,
-	    subscribe   =>File[$source]
+	    subscribe   => File[$source]
 	}
     }
     

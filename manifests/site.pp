@@ -2,6 +2,8 @@ import "sites/*.pp"
 import "php"
 import "apache"
 import "proftpd"
+import "git"
+import "mysql"
 
 $mysql_password   = "secret"
 $mysql_datadir    = "/var/lib/mysql"
