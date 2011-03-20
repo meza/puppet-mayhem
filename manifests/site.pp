@@ -3,7 +3,6 @@ import "php"
 import "apache"
 import "proftpd"
 import "git"
-import "mysql"
 
 $mysql_password   = "secret"
 $mysql_datadir    = "/var/lib/mysql"
@@ -19,4 +18,8 @@ filebucket {
 
 File { 
     backup => main 
+}
+
+node 'virtual-ubuntusrv-1010-01.meza.hu' {
+    include lifetimefitness
 }
