@@ -43,9 +43,11 @@ class apache::server {
 	}
     }
     
-    define vhost( $host="*", $port="80" ) {
-    
-	$docroot    = "/var/www/$name"
+    define vhost( $host="*", $port="80", $docroot="") {
+	
+	if $docroot == "" {
+	    $docroot    = "/var/www/$name"
+	}
 	$errorLog   = "/var/log/apache2/$name-error.log"
 	$accessLog  = "/var/log/apache2/$name-access.log"
 	$logFiles   = [$errorLog, $accessLog]
