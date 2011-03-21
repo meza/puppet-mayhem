@@ -11,14 +11,14 @@ class git {
     
     define clone ( $repository, $targetDir ) {
 	exec {
-	    "git clone":
+	    "git clone $repository":
 	    unless  => "/usr/bin/test -d $targetDir",
 	    command => "/usr/bin/git clone -q $repository $targetDir",
 	    require => Package["git-core"],
 	}
 	
 	exec {
-	    "git pull":
+	    "git pull $repository":
 		onlyif  => "/usr/bin/test -d $targetDir",
 		cwd     => $targetDir,
 		command => "/usr/bin/git pull",
