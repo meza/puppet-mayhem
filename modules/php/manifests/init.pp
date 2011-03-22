@@ -4,7 +4,7 @@ class php {
 	    "libapache2-mod-php5",
 	    "php5",
 	    "php5-svn",
-	    "php5-dev",
+#	    "php5-dev",
 	    "php5-cli",
 	    "php5-cgi",
 	    "php-pear",

@@ -19,7 +19,7 @@ class git {
 	
 	exec {
 	    "git pull $repository":
-		onlyif  => "/usr/bin/test -d $targetDir",
+		onlyif  => "/usr/bin/test -d $targetDir/.git",
 		cwd     => $targetDir,
 		command => "/usr/bin/git pull",
 		require => Package["git-core"]
