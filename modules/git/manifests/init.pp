@@ -1,14 +1,19 @@
 class git {
 
-    define setup() {
-	$packages = ["git-core"]
-    
+    define setup($gitversion="latest", $gitcoreversion="latest") {
+
 	package {
-	    $packages:
-		ensure => installed
+	    "git":
+		ensure => $gitversion
+	}
+
+	package {
+	    "git-core":
+		ensure => $gitcoreversion,
+		require => Package["git"]
 	}
     }
-    
+
     define clone ( $repository, $targetDir ) {
 	exec {
 	    "git clone $repository":

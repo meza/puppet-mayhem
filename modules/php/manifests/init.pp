@@ -1,13 +1,55 @@
 class php {
+    
+    define installPhp5Base(
+	$php5version="latest",
+	$php5commonversion="latest",
+	$cliversion="latest",
+	$cgiversion="latest",
+	$pearversion="latest"
+    )
+    {
+	package {
+	    "php5":
+		ensure => $php5version,
+	}
+	
+	package {
+	    "php5-common":
+		ensure  => $php5commonversion,
+		require => Package["php5"]
+	}
+	
+	package {
+	    "php5-cli":
+		ensure  => $cliversion,
+		require => Package["php5-common"]
+	}
+	
+	package {
+	    "php5-cgi":
+		ensure  => $cgiversion,
+		require => Package["php5-common"]
+	}
+	
+	package {
+	    "php-pear":
+		ensure => $pearversion,
+		require => Package["php5-common"]
+	}
+    }
+    
+    define installApacheModule($version="latest")
+    {
+	package {
+	    "libapache2-mod-php5":
+		ensure => $version
+	}
+    }
+    
     define setup() {
 	$packagelist = [
-	    "libapache2-mod-php5",
-	    "php5",
 	    "php5-svn",
 #	    "php5-dev",
-	    "php5-cli",
-	    "php5-cgi",
-	    "php-pear",
 	    "php5-gd",
 	    "php5-mcrypt",
 	    "php5-curl",
@@ -24,6 +66,17 @@ class php {
 	    $packagelist:
 		ensure => installed
     	}
+    }
+}
+
+class php::pear {
+    define install()
+    {
+	package {
+	    $name:
+		provider => pear,
+		ensure   => installed
+	}
     }
 }
 

@@ -1,15 +1,20 @@
 class sshd {
 
-    define setup() {
-	$packagelist = ["openssh-server", "openssh-client"]
+    define setup($version="latest") {
+
 	package {
-	    $packagelist: ensure => installed
-	}
-    
-	service {
+	    "openssh-server": 
+		ensure => $version
+	} -> service {
 	    ssh:
-		enable => true,
-		ensure => running,
+		enable  => true,
+		ensure  => running
+	} -> file {
+	    "/etc/ssh/sshd_config":
+		source  => "puppet:///sshd/sshd_config",
+		ensure  => present,
+		replace => true
 	}
+
     }
 }

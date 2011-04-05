@@ -1,22 +1,32 @@
 class proftpd {
 
-    define setup($database, $username, $password) {
-        package { ["proftpd", "proftpd-mod-mysql"]:
-	    ensure => "installed",
+    define setup($database, $username, $password, $mysqlAdminPass="", $version="latest", $mysqlmodversion="latest") {
+        package { "proftpd":
+    	    name   => "proftpd-basic",
+	    ensure => $version,
+	}
+	
+	package {
+	    "proftpd-mod-mysql":
+		ensure => $mysqlmodversion,
+		require => Package["proftpd"]
 	}
     
 	service {
 	    "proftpd":
-		ensure  => running,
-		enable  => true,
-		require => [Package["proftpd"], Service["mysql"]]
+		ensure     => running,
+		enable     => true,
+		require    => [Package["proftpd"], Service["mysql"]],
+		hasrestart => true,
+		hasstatus  => true
 	}
 
 	mysql::server::mysqldb { 
 	    $database :
-		user     => $username,
-    		password => $password,
-    		require  => Service["mysql"]
+		user          => $username,
+    		password      => $password,
+    		adminPassword => $mysqlAdminPass,
+    		require       => Service["mysql"]
 	}	
 	
 	group {
@@ -41,22 +51,13 @@ class proftpd {
 		require => Package["proftpd"]
 	}
     
-	file {
-	    "/etc/proftpd/proftpd-schema.sql":
-		require => [Package["proftpd"], User["ftpuser"]],
-    		ensure  => "present",
-        	owner   => "root",
-        	group   => "root",
-        	source  => "puppet:///proftpd/database/schema.sql",
-	}
-    
 	mysql::server::feedDatabase {
 	    "$database-schema":
 		database => $database,
-        	source   => "/etc/proftpd/proftpd-schema.sql",
+        	source   => "puppet:///proftpd/database/schema.sql",
 		username => $username,
         	password => $password,
-        	require  => [File["/etc/proftpd/proftpd-schema.sql"], Service["mysql"], Mysql::Server::Mysqldb[$database]]
+        	require  => [Service["mysql"], Mysql::Server::Mysqldb[$database], Package["proftpd"], User["ftpuser"]]
 	}
     
         $servername = "ftp server"
