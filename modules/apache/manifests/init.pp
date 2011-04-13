@@ -2,20 +2,22 @@ class apache::server {
 
     define setup(
 	$version="latest",
-	$modsecurityversion="latest") {
-    
+	$modsecurityversion="latest"
+    ) {
+
 	package {
 	    "apache2":
 		ensure => $version,
-	}
-	
-	package {
+	} -> package {
 	    "libapache-mod-security":
 		ensure  => $modsecurityversion,
-		require => Package["apache2"]
+	} -> service {
+	    "apache2":
+		ensure     => running,
+		hasrestart => true,
+		hasstatus  => true
 	}
-	
-	
+
 	file {
 	    "/etc/apache2/mods-available/mod-security.conf":
 		ensure  => present,
@@ -49,7 +51,7 @@ class apache::server {
 		require => Package["apache2"],
 		notify  => Service["apache2"],
 	}
-	
+
 	file {
 	    "/var/www":
 		ensure  => directory,
@@ -59,15 +61,9 @@ class apache::server {
 		require => Package["apache2"]
 	}
 
-        service {
-	    "apache2":
-		ensure     => running,
-		hasrestart => true,
-		hasstatus  => true,
-		require    => Package["apache2"],
-	}
+
     }
-    
+
     define vhost( $host="*", $port="80", $root="", $phpinidir="/etc/php5/apache2") {
 	
 	if $root == "" {
@@ -88,7 +84,7 @@ class apache::server {
 		mode    => 775,
 		require => Package["apache2"],
 	}
-	
+
 	file {
 	    $logFiles:
 		ensure  => "present",
@@ -96,7 +92,7 @@ class apache::server {
 		group   => "www-data",
 		require => Package["apache2"]
 	}
-	
+
 	file {
 	    $configFile:
 		ensure  => "present",
@@ -106,7 +102,7 @@ class apache::server {
 		content => template("apache/vhost.conf.erb"),
 		require => Package["apache2"]
 	}
-	
+
 	file {
 	    "/etc/apache2/sites-enabled/$name.conf":
 		ensure  => symlink,
@@ -120,6 +116,6 @@ class apache::server {
 		],
 		notify  => Service["apache2"]
 	}
-	
+
     }
 }
