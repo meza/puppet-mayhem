@@ -1,0 +1,23 @@
+    package {
+	"build-essential":
+	    ensure => latest
+    } -> package {
+	"php5-gd":
+	    ensure => latest
+    } -> package {
+	"libgd2-xpm":
+	    ensure => latest
+    } -> package {
+	"libgd2-xpm-dev":
+	    ensure => latest
+    }
+    
+    apache::server::setup {
+	"base":
+    }
+    
+    nagios::server::setup {
+    "base":
+	nagiosUser  => "nagios",
+	nagiosGroup => "nagcmd"
+    }
